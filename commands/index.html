@@ -771,13 +771,13 @@
 
 
 <h1 id="commands">Commands</h1>
-<p>This page lists all available <strong>DAI CLI</strong> commands and their usage.</p>
+<p>This page lists all available <strong>DAI CLI</strong> commands, their flags, and usage examples.</p>
 <hr />
 <h2 id="dai-auth"><code>dai auth</code></h2>
 <p>Authenticate DAI with external services (currently GitHub token only).</p>
 <pre><code class="language-bash">dai auth
 </code></pre>
-<p>Prompts for a GitHub Personal Access Token (PAT) and saves it in the local configuration.</p>
+<p>Prompts for a GitHub Personal Access Token (PAT) and stores it in the local configuration.</p>
 <hr />
 <h2 id="dai-completion"><code>dai completion</code></h2>
 <p>Generate the autocompletion script for your shell.</p>
@@ -793,25 +793,64 @@ dai completion fish
 <hr />
 <h2 id="dai-ignore"><code>dai ignore</code></h2>
 <p>Create a default <code>.daiignore</code> file in the project root (uses <code>.gitignore</code> syntax).</p>
-<pre><code class="language-bash">dai ignore
+<pre><code class="language-bash">dai ignore [flags]
 </code></pre>
+<p><strong>Flags:</strong>
+| Flag          | Description                                                   | Default         |
+|---------------|---------------------------------------------------------------|-----------------|
+| <code>--path</code>      | Path to create the <code>.daiignore</code> file (relative to project root) | <code>.daiignore</code>    |
+| <code>--force</code>     | Overwrite existing file without prompting                     | <code>false</code>         |
+| <code>--yes</code>       | Non-interactive: assume “yes” to prompts                      | <code>false</code>         |</p>
 <hr />
 <h2 id="dai-init"><code>dai init</code></h2>
 <p>Initialize DAI for the current project by creating <code>.dai/project.yaml</code>.</p>
-<pre><code class="language-bash">dai init
+<pre><code class="language-bash">dai init [flags]
 </code></pre>
+<p><strong>Flags:</strong>
+| Flag         | Description                                                        | Default |
+|--------------|--------------------------------------------------------------------|---------|
+| <code>-f, --force</code>   | Overwrite existing <code>.dai/project.yaml</code> without prompt            | <code>false</code> |
+| <code>-v, --verbose</code> | Print detected git info                                          | <code>false</code> |
+| <code>-p, --path</code>    | Project path (defaults to current directory)                     | <code>.</code>     |</p>
 <hr />
 <h2 id="dai-triage"><code>dai triage</code></h2>
-<p>Analyze a commit and open a single GitHub issue with findings.</p>
-<pre><code class="language-bash">dai triage --commit &lt;commit_hash&gt;
+<p>Analyze a commit and open a single GitHub issue with findings.<br />
+If <code>[commit]</code> is <strong>not</strong> provided, DAI will analyze the <strong>latest commit (HEAD)</strong> in the repository.</p>
+<pre><code class="language-bash">dai triage [commit] [flags]
 </code></pre>
-<p>Options:
-- <code>--commit</code> — Commit hash to analyze (defaults to the latest commit)</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-bash"># Analyze the latest commit
+dai triage
+
+# Analyze a specific commit
+dai triage 8282882
+
+# Dry run without creating an issue
+dai triage 8282882 --dry-run
+</code></pre>
+<p><strong>Flags:</strong>
+| Flag             | Description                                                        | Default                                        |
+|------------------|--------------------------------------------------------------------|------------------------------------------------|
+| <code>--ext</code>          | Comma-separated file extensions to analyze                         | <code>.js,.jsx,.ts,.tsx,.vue,.php,.py,.go</code>          |
+| <code>--dry-run</code>      | Print the would-be GitHub issue without creating it                 | <code>false</code>                                        |
+| <code>--model</code>        | Override OpenAI model from config (optional)                        | <em>(none)</em>                                       |
+| <code>--max-file-kb</code>  | Max file size per analyzed file (KB)                                | <code>80</code>                                           |
+| <code>--ignore</code>       | Path to ignore file (gitignore syntax), relative to project root    | <code>.daiignore</code>                                   |
+| <code>--always-open</code>  | Always create a GitHub issue even when no findings                  | <code>false</code>                                        |
+| <code>--diff-context</code> | Number of context lines per diff hunk                               | <code>3</code>                                            |</p>
 <hr />
 <h2 id="dai-triage-local"><code>dai triage-local</code></h2>
 <p>Analyze a single local file and append findings to <code>.dai/local.log</code>.</p>
-<pre><code class="language-bash">dai triage-local path/to/file.go
+<pre><code class="language-bash">dai triage-local path/to/file.go [flags]
 </code></pre>
+<p><strong>Flags:</strong>
+| Flag             | Description                                          | Default             |
+|------------------|------------------------------------------------------|---------------------|
+| <code>--model</code>        | Override OpenAI model from config (optional)          | <em>(none)</em>            |
+| <code>--max-file-kb</code>  | Max bytes per analyzed file (KB)                      | <code>200</code>               |
+| <code>--log</code>          | Path to local log file (relative to project root)     | <code>.dai/local.log</code>    |
+| <code>--format</code>       | Log format (<code>md</code> or <code>json</code>)                           | <code>md</code>                 |
+| <code>--no-stdout</code>    | Do not print findings to stdout (log only)            | <code>false</code>             |</p>
 <hr />
 <h2 id="global-flags">Global Flags</h2>
 <table>
